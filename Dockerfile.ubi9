@@ -1,0 +1,58 @@
+# syntax=docker/dockerfile:1
+
+ARG UBI9_IMAGE=registry.access.redhat.com/ubi9/ubi:latest
+
+FROM ${UBI9_IMAGE}
+
+ARG PYTORCH_VERSION=2.14.0
+ARG PYTORCH_SOURCE_VERSION=2.14.0a0
+ARG MAX_JOBS=4
+
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTORCH_BUILD_VERSION=${PYTORCH_VERSION} \
+    PYTORCH_BUILD_NUMBER=1 \
+    USE_CUDA=0 \
+    USE_ROCM=0 \
+    USE_DISTRIBUTED=0 \
+    USE_KINETO=0 \
+    USE_MKLDNN=0 \
+    USE_NNPACK=0 \
+    BLAS=OpenBLAS \
+    MAX_JOBS=${MAX_JOBS}
+
+RUN dnf install -y --setopt=install_weak_deps=False \
+        ca-certificates \
+        cmake \
+        gcc \
+        gcc-c++ \
+        libgomp \
+        make \
+        ninja-build \
+        openblas \
+        openblas-devel \
+        python3.12 \
+        python3.12-devel \
+        python3.12-pip \
+        which \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
+
+WORKDIR /opt/pytorch
+
+COPY . .
+
+RUN test "$(cat version.txt)" = "${PYTORCH_SOURCE_VERSION}" \
+    && test -f third_party/XNNPACK/CMakeLists.txt \
+    && python3.12 -m pip install --upgrade pip setuptools wheel \
+    && python3.12 -m pip install --requirement requirements.txt \
+    && python3.12 -m pip install --editable . --verbose --no-build-isolation \
+    && python3.12 -c "import torch; print(torch.__version__)"
+
+RUN chgrp -R 0 /opt/pytorch \
+    && chmod -R g=u /opt/pytorch
+
+USER 1001
+
+CMD ["python3.12"]
