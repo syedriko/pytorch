@@ -48,7 +48,10 @@ RUN test "$(cat version.txt)" = "${PYTORCH_SOURCE_VERSION}" \
     && test -f third_party/XNNPACK/CMakeLists.txt \
     && python3.12 -m pip install --upgrade pip setuptools wheel \
     && python3.12 -m pip install --requirement requirements.txt \
-    && python3.12 -m pip install --editable . --verbose --no-build-isolation \
+    && mkdir --parents /opt/wheels \
+    && python3.12 -m pip wheel --wheel-dir /opt/wheels --no-deps \
+        --no-build-isolation . \
+    && python3.12 -m pip install --no-deps /opt/wheels/torch-*.whl \
     && python3.12 -c "import torch; print(torch.__version__)"
 
 RUN chgrp -R 0 /opt/pytorch \

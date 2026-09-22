@@ -1,0 +1,38 @@
+# syntax=docker/dockerfile:1
+#
+# Build with a digest-pinned image reference, for example:
+# podman build \
+#   --build-arg PYTORCH_IMAGE=quay.io/redhat-user-workloads/lightspeed-core-tenant/pytorch@sha256:<digest> \
+#   --file Dockerfile.ubi9.consumer-example .
+ARG PYTORCH_IMAGE=quay.io/redhat-user-workloads/lightspeed-core-tenant/pytorch:2.14.0
+
+FROM ${PYTORCH_IMAGE} AS pytorch-builder
+
+FROM registry.access.redhat.com/ubi9/ubi:latest
+
+# These are runtime dependencies of the CPU-only Torch wheel built in
+# Dockerfile.ubi9.  Python dependencies declared by the wheel are resolved by
+# pip from its configured package index during the following installation.
+RUN dnf install -y --setopt=install_weak_deps=False \
+        ca-certificates \
+        libgomp \
+        openblas \
+        python3.12 \
+        python3.12-pip \
+    && dnf clean all \
+    && rm -rf /var/cache/dnf
+
+COPY --from=pytorch-builder /opt/wheels/ /opt/wheels/
+
+RUN python3.12 -m pip install --no-cache-dir /opt/wheels/torch-*.whl \
+    && rm -rf /opt/wheels
+
+WORKDIR /app
+COPY . /app
+
+RUN chgrp -R 0 /app \
+    && chmod -R g=u /app
+
+USER 1001
+
+CMD ["python3.12", "-c", "import torch; print(torch.__version__)"]
