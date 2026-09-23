@@ -594,6 +594,15 @@ spec:
   timeouts:
     pipeline: 4h
     tasks: 4h
+  taskRunSpecs:
+  - pipelineTaskName: build-images
+    stepSpecs:
+    - name: build
+      computeResources:
+        requests:
+          memory: 16Gi
+        limits:
+          memory: 16Gi
   taskRunTemplate:
     serviceAccountName: build-pipeline-pytorch
   workspaces:
