@@ -572,6 +572,9 @@ spec:
       optional: true
     - name: netrc
       optional: true
+  timeouts:
+    pipeline: 4h
+    tasks: 4h
   taskRunTemplate:
     serviceAccountName: build-pipeline-pytorch
   workspaces:
