@@ -41,7 +41,8 @@ spec:
         {
           "type": "pip",
           "path": ".",
-          "requirements_files": ["requirements-hermetic.txt"]
+          "requirements_files": ["requirements-hermetic.txt"],
+          "requirements_build_files": ["requirements-hermetic-build.txt"]
         }
       ]
   - name: hermetic
