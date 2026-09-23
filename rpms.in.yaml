@@ -1,0 +1,24 @@
+packages:
+  - autoconf
+  - automake
+  - ca-certificates
+  - cmake
+  - gcc
+  - gcc-c++
+  - libgomp
+  - libtool
+  - make
+  - ninja-build
+  - openblas
+  - openblas-devel
+  - openssl-devel
+  - python3.12
+  - python3.12-devel
+  - python3.12-pip
+  - which
+contentOrigin:
+  repofiles:
+    - ./ubi.repo
+arches:
+  - x86_64
+  - aarch64

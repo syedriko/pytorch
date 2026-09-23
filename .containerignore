@@ -1,0 +1,14 @@
+# The repository's .dockerignore is a symlink used by PyTorch's source-cleanup
+# tooling.  Podman gives this file precedence, so keep image build context
+# rules here instead.
+.git
+.git/**
+
+# Do not copy outputs from a local build into a clean container build.
+build
+build/**
+dist
+dist/**
+*.whl
+__pycache__
+**/__pycache__

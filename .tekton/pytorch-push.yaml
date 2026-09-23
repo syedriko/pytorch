@@ -31,6 +31,21 @@ spec:
     value: Dockerfile.ubi9
   - name: path-context
     value: .
+  - name: prefetch-input
+    value: |
+      [
+        {
+          "type": "rpm",
+          "path": "."
+        },
+        {
+          "type": "pip",
+          "path": ".",
+          "requirements_files": ["requirements-hermetic.txt"]
+        }
+      ]
+  - name: hermetic
+    value: "true"
   pipelineSpec:
     description: |
       This pipeline is ideal for building multi-arch container images from a Containerfile while maintaining trust after pipeline customization.
