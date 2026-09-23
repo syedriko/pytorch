@@ -52,10 +52,13 @@ RUN test "$(cat version.txt)" = "${PYTORCH_SOURCE_VERSION}" \
     && python3.12 -m pip wheel --wheel-dir /opt/wheels --no-deps \
         --no-build-isolation . \
     && python3.12 -m pip install --no-deps /opt/wheels/torch-*.whl \
+    && cd /tmp \
     && python3.12 -c "import torch; print(torch.__version__)"
 
 RUN chgrp -R 0 /opt/pytorch \
     && chmod -R g=u /opt/pytorch
+
+WORKDIR /
 
 USER 1001
 
