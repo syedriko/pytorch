@@ -55,7 +55,7 @@ RUN test "$(cat version.txt)" = "${PYTORCH_SOURCE_VERSION}" \
         --requirement requirements-hermetic.txt \
     && mkdir --parents /opt/wheels \
     && export MAX_JOBS="${MAX_JOBS:-$(nproc)}" \
-    && python3.12 -m pip wheel --wheel-dir /opt/wheels --no-deps \
+    && python3.12 -m pip wheel --verbose --wheel-dir /opt/wheels --no-deps \
         --no-build-isolation . \
     && python3.12 -m pip install --no-deps /opt/wheels/torch-*.whl \
     && cd /tmp \
