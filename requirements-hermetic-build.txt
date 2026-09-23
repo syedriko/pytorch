@@ -164,6 +164,10 @@ vcs-versioning==2.4.1 \
     --hash=sha256:b7089ec9bef67b2cad82148366e8eac4d63173f440ec62628282b59eb96bbcb0 \
     --hash=sha256:d4575de3115ec9434393c87c80ffb0eb98a16056bfe2b11ce0f3a97aff67fe0a
     # via setuptools-scm
+wheel==0.48.0 \
+    --hash=sha256:3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab \
+    --hash=sha256:94800765601e9171bf5d58d066e640662842bcedcbab982b2c90787a2c987322
+    # via setuptools
 
 # The following packages are considered to be unsafe in a requirements file:
 setuptools==81.0.0 \
