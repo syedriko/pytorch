@@ -29,7 +29,7 @@ spec:
     - linux-c6gd2xlarge/arm64
   - name: build-args
     value:
-    - MAX_JOBS=4
+    - MAX_JOBS=8
   - name: dockerfile
     value: Dockerfile.ubi9
   - name: path-context
@@ -49,6 +49,8 @@ spec:
         }
       ]
   - name: hermetic
+    value: "true"
+  - name: build-source-image
     value: "true"
   pipelineSpec:
     description: |
