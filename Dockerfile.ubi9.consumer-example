@@ -10,13 +10,17 @@ FROM ${PYTORCH_IMAGE} AS pytorch-builder
 
 FROM registry.access.redhat.com/ubi9/ubi:latest
 
+# Allow the copied Torch wheel, but build dependencies fetched from PyPI
+# from source distributions rather than consuming binary wheels.
+ENV PIP_NO_BINARY=:all:
+
 # These are runtime dependencies of the CPU-only Torch wheel built in
 # Dockerfile.ubi9.  Python dependencies declared by the wheel are resolved by
 # pip from its configured package index during the following installation.
 RUN dnf install -y --setopt=install_weak_deps=False \
         ca-certificates \
         libgomp \
-        openblas \
+        openblas-serial \
         python3.12 \
         python3.12-pip \
     && dnf clean all \
@@ -34,5 +38,7 @@ RUN chgrp -R 0 /app \
     && chmod -R g=u /app
 
 USER 1001
+
+RUN python3.12 -c "import torch; print(torch.__version__)"
 
 CMD ["python3.12", "-c", "import torch; print(torch.__version__)"]

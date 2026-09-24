@@ -2,7 +2,7 @@
 
 ARG UBI9_IMAGE=registry.access.redhat.com/ubi9/ubi:latest
 
-FROM ${UBI9_IMAGE}
+FROM ${UBI9_IMAGE} AS pytorch-builder
 
 ARG PYTORCH_VERSION=2.14.0
 ARG PYTORCH_SOURCE_VERSION=2.14.0a0
@@ -61,11 +61,10 @@ RUN test "$(cat version.txt)" = "${PYTORCH_SOURCE_VERSION}" \
     && cd /tmp \
     && python3.12 -c "import torch; print(torch.__version__)"
 
-RUN chgrp -R 0 /opt/pytorch \
-    && chmod -R g=u /opt/pytorch
+FROM ${UBI9_IMAGE}
 
-WORKDIR /
+# Keep the build toolchain, source tree, and compiled objects out of the
+# published image. Consumers copy this wheel into their own runtime image.
+COPY --from=pytorch-builder /opt/wheels/ /opt/wheels/
 
 USER 1001
-
-CMD ["python3.12"]
