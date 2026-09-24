@@ -32,7 +32,7 @@ spec:
     - linux-c6gd2xlarge/arm64
   - name: build-args
     value:
-    - MAX_JOBS=8
+    - MAX_JOBS=4
   - name: dockerfile
     value: Dockerfile.ubi9
   - name: path-context
