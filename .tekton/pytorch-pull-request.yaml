@@ -600,9 +600,9 @@ spec:
     - name: build
       computeResources:
         requests:
-          memory: 16Gi
+          memory: 32Gi
         limits:
-          memory: 16Gi
+          memory: 32Gi
   taskRunTemplate:
     serviceAccountName: build-pipeline-pytorch
   workspaces:
